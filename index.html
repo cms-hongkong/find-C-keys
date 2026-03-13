@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>鋼琴挑戰：尋找隱藏的 C 🎹 Precision Fix</title>
+    <title>鋼琴挑戰：尋找隱藏的 C 🎹 Precision Edit</title>
     <style>
         :root {
             --white-key-width: 52px; 
@@ -76,22 +76,22 @@
 
         /* --- 第 1 及第 3 組 (2黑鍵組) --- */
         .group-2 .black-key { margin: 0 calc(var(--gap-group-2) / 2); }
-        .group-2 .black-key:nth-child(1) { left: 0px; } /* 修正：恢復原位 */
+        .group-2 .black-key:nth-child(1) { left: 0px; }
         .group-2 .black-key:nth-child(2) { left: -4px; } 
         .group-2 { left: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--left-offset)); }
         
         /* --- 第 2 組 (3黑鍵組) --- */
         .group-3 .black-key { margin: 0 calc(var(--gap-group-3) / 2); }
-        .group-3 .black-key:nth-child(1) { left: 0px; } /* 修正：恢復原位 */
+        .group-3 .black-key:nth-child(1) { left: 0px; }
         .group-3 .black-key:nth-child(2) { left: -3px; }
-        .group-3 .black-key:nth-child(3) { left: -5px; }
+        /* 【核心修正】第 2 組嘅第 3 粒黑鍵左移 1px (原本 -5px -> 變成 -6px) */
+        .group-3 .black-key:nth-child(3) { left: -6px; } 
         .group-3 { left: calc(var(--container-padding) + (var(--white-key-width) * 4) - (var(--black-key-width) + (var(--gap-group-3) / 2)) + var(--left-offset)); }
         
         .octave-2-low { left: calc(var(--container-padding) + (var(--white-key-width) * 8) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--left-offset)); }
         
         /* --- 第 4 組 (最右邊 3黑鍵組) --- */
         .last-group-3 .black-key { margin: 0 calc(var(--gap-group-3-last) / 2); }
-        /* 核心位移：得呢組嘅第 1 粒向左移 2px (原本右移 8px -> 變成右移 6px) */
         .last-group-3 .black-key:nth-child(1) { left: 6px; } 
         .last-group-3 .black-key:nth-child(2) { left: 3px; }
         .last-group-3 .black-key:nth-child(3) { left: 0px; }
