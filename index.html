@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>鋼琴挑戰：尋找隱藏的 C 🎹</title>
+    <title>鋼琴挑戰：尋找隱藏的 C 🎹 Precision</title>
     <style>
         :root {
-            /* 基礎尺寸 */
             --white-key-width: 52px; 
             --white-key-height: 170px;
             --black-key-width: 34px;
@@ -16,9 +15,8 @@
             --gap-group-3-last: 21px;
             --container-padding: 12px; 
 
-            /* --- 核心修正：拆分左右偏移量 --- */
-            --left-offset: 14px;   /* 左邊向左移 1px (原本 15) */
-            --right-offset: 15px;  /* 右邊維持不變 (固定在 15) */
+            --left-offset: 14px;   
+            --right-offset: 15px;  
 
             --color-found-C: #e67e5e; 
         }
@@ -86,6 +84,7 @@
             z-index: 2;
             top: calc(var(--container-padding) - 5px); 
             padding: 3px;
+            border-radius: 5px;
             pointer-events: none; 
         }
         .black-key {
@@ -96,16 +95,22 @@
             box-shadow: 2px 3px 6px rgba(0,0,0,0.6);
         }
 
-        /* --- 左邊與中間組：使用 left-offset --- */
+        /* --- 2個黑鍵組 (第1及第3組) --- */
         .group-2 .black-key { margin: 0 calc(var(--gap-group-2) / 2); }
+        
+        /* 【核心修正】將第 1 及 第 3 組嘅第 2 個黑鍵向左移 3px */
+        .group-2 .black-key:nth-child(2) {
+            margin-left: calc(var(--gap-group-2) / 2 - 3px);
+        }
+
         .group-2 { left: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--left-offset)); }
         
+        /* --- 3個黑鍵組 --- */
         .group-3 .black-key { margin: 0 calc(var(--gap-group-3) / 2); }
         .group-3 { left: calc(var(--container-padding) + (var(--white-key-width) * 4) - (var(--black-key-width) + (var(--gap-group-3) / 2)) + var(--left-offset)); }
         
         .octave-2-low { left: calc(var(--container-padding) + (var(--white-key-width) * 8) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--left-offset)); }
         
-        /* --- 最右邊最後一組：獨立使用 right-offset --- */
         .last-group-3 .black-key { margin: 0 calc(var(--gap-group-3-last) / 2); }
         .last-group-3 {
             right: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--right-offset));
