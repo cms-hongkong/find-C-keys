@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>鋼琴挑戰：尋找隱藏的 C 🎹 Precision</title>
+    <title>鋼琴挑戰：尋找隱藏的 C 🎹 Precision Plus</title>
     <style>
         :root {
             --white-key-width: 52px; 
@@ -98,9 +98,9 @@
         /* --- 2個黑鍵組 (第1及第3組) --- */
         .group-2 .black-key { margin: 0 calc(var(--gap-group-2) / 2); }
         
-        /* 【核心修正】將第 1 及 第 3 組嘅第 2 個黑鍵向左移 3px */
+        /* 【核心修正】將第 1 及 第 3 組嘅第 2 個黑鍵向左移 4px (原本係 3px) */
         .group-2 .black-key:nth-child(2) {
-            margin-left: calc(var(--gap-group-2) / 2 - 3px);
+            margin-left: calc(var(--gap-group-2) / 2 - 4px);
         }
 
         .group-2 { left: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--left-offset)); }
