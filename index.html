@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>鋼琴挑戰：尋找隱藏的 C 🎹 Precision Plus</title>
+    <title>鋼琴挑戰：尋找隱藏的 C 🎹 Ultra Precision</title>
     <style>
         :root {
             --white-key-width: 52px; 
@@ -95,28 +95,30 @@
             box-shadow: 2px 3px 6px rgba(0,0,0,0.6);
         }
 
-        /* --- 2個黑鍵組 (第1及第3組) --- */
+        /* --- 第 1 組及第 3 組 (2黑鍵組) --- */
         .group-2 .black-key { margin: 0 calc(var(--gap-group-2) / 2); }
-        
-        /* 【核心修正】將第 1 及 第 3 組嘅第 2 個黑鍵向左移 4px (原本係 3px) */
-        .group-2 .black-key:nth-child(2) {
-            margin-left: calc(var(--gap-group-2) / 2 - 4px);
-        }
-
+        .group-2 .black-key:nth-child(2) { margin-left: calc(var(--gap-group-2) / 2 - 4px); }
         .group-2 { left: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--left-offset)); }
         
-        /* --- 3個黑鍵組 --- */
+        /* --- 第 2 組 (3黑鍵組)：中間左移 3px, 右邊左移 5px --- */
         .group-3 .black-key { margin: 0 calc(var(--gap-group-3) / 2); }
+        .group-3 .black-key:nth-child(2) { margin-left: calc(var(--gap-group-3) / 2 - 3px); }
+        .group-3 .black-key:nth-child(3) { margin-left: calc(var(--gap-group-3) / 2 - 5px); }
         .group-3 { left: calc(var(--container-padding) + (var(--white-key-width) * 4) - (var(--black-key-width) + (var(--gap-group-3) / 2)) + var(--left-offset)); }
         
         .octave-2-low { left: calc(var(--container-padding) + (var(--white-key-width) * 8) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--left-offset)); }
         
+        /* --- 第 4 組 (3黑鍵組)：左右移 5px, 中右移 3px, 右右移 1px --- */
         .last-group-3 .black-key { margin: 0 calc(var(--gap-group-3-last) / 2); }
+        .last-group-3 .black-key:nth-child(1) { margin-left: calc(var(--gap-group-3-last) / 2 + 5px); }
+        .last-group-3 .black-key:nth-child(2) { margin-left: calc(var(--gap-group-3-last) / 2 + 3px); }
+        .last-group-3 .black-key:nth-child(3) { margin-left: calc(var(--gap-group-3-last) / 2 + 1px); }
         .last-group-3 {
             right: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--right-offset));
             left: auto; 
         }
 
+        /* 煙花動畫 (維持不變) */
         .firework-particle {
             position: absolute;
             width: 8px; height: 8px;
@@ -126,13 +128,11 @@
             opacity: 0;
             box-shadow: 0 0 10px currentColor;
         }
-
         @keyframes firework-mega-burst {
             0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
             50% { opacity: 1; }
             100% { transform: translate(var(--x), calc(var(--y) + 60px)) scale(0); opacity: 0; }
         }
-
         #victory-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
