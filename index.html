@@ -6,7 +6,7 @@
     <title>鋼琴挑戰：尋找隱藏的 C 🎹</title>
     <style>
         :root {
-            /* 沿用你的黃金比例尺寸 */
+            /* 基礎尺寸維持不變 */
             --white-key-width: 52px; 
             --white-key-height: 170px;
             --black-key-width: 34px;
@@ -15,9 +15,10 @@
             --gap-group-3: 22px;  
             --gap-group-3-last: 21px;
             --container-padding: 12px; 
-            --right-offset: 18px; 
+            
+            /* --- 核心修正：Offset 18 -> 16，實現向邊框移 2px --- */
+            --right-offset: 16px; 
 
-            /* 答啱先顯示嘅橙紅色 */
             --color-found-C: #e67e5e; 
         }
 
@@ -58,7 +59,6 @@
             margin-right: 10px;
         }
 
-        /* 初始白鍵：無文字、無顏色 */
         .white-key {
             width: var(--white-key-width);
             height: var(--white-key-height);
@@ -72,16 +72,13 @@
         }
         .white-key:active { transform: translateY(4px); }
 
-        /* 答啱之後顯色 */
         .found-C { 
             background: var(--color-found-C) !important; 
             box-shadow: inset 0 -10px 20px rgba(0,0,0,0.2), 0 0 15px var(--color-found-C);
         }
 
-        /* 答錯回饋 */
         .wrong { background: rgba(239, 68, 68, 0.6) !important; }
 
-        /* 黑鍵樣式 (維持不變) */
         .black-group {
             position: absolute;
             display: flex;
@@ -100,15 +97,19 @@
 
         .group-2 .black-key { margin: 0 calc(var(--gap-group-2) / 2); }
         .group-2 { left: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--right-offset)); }
+        
         .group-3 .black-key { margin: 0 calc(var(--gap-group-3) / 2); }
         .group-3 { left: calc(var(--container-padding) + (var(--white-key-width) * 4) - (var(--black-key-width) + (var(--gap-group-3) / 2)) + var(--right-offset)); }
+        
         .octave-2-low { left: calc(var(--container-padding) + (var(--white-key-width) * 8) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--right-offset)); }
+        
+        .last-group-3 .black-key { margin: 0 calc(var(--gap-group-3-last) / 2); }
         .last-group-3 {
+            /* 鏡像邏輯：使用同樣的 offset 數值應用於 right */
             right: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--right-offset));
             left: auto; 
         }
 
-        /* 強力煙花 */
         .firework-particle {
             position: absolute;
             width: 8px; height: 8px;
@@ -181,7 +182,7 @@
         let isTransitioning = false;
 
         function checkNote(note, element) {
-            if (isTransitioning || element.classList.contains('found-C') || element.classList.contains('wrong')) return;
+            if (isTransitioning || element.classList.contains('found-C')) return;
 
             if (note === 'C') {
                 isTransitioning = true;
@@ -190,31 +191,25 @@
                 document.getElementById('score').innerText = score;
                 document.getElementById('progress').innerText = progress;
                 
-                // 【核心改動】答啱先顯色
                 element.classList.add('found-C');
                 triggerMegaFirework(element);
 
-                // 等待煙花結束
                 setTimeout(() => {
                     if (progress >= 10) {
                         document.getElementById('victory-screen').style.display = 'flex';
                     } else {
-                        // 移除顯色，準備下一題
                         element.classList.remove('found-C');
                         isTransitioning = false;
                     }
                 }, 2200);
             } else {
-                // 答錯閃爍紅色回饋
                 element.classList.add('wrong');
                 setTimeout(() => element.classList.remove('wrong'), 500);
             }
         }
 
         function resetGame() {
-            score = 0;
-            progress = 0;
-            isTransitioning = false;
+            score = 0; progress = 0; isTransitioning = false;
             document.querySelectorAll('.white-key').forEach(k => k.classList.remove('found-C', 'wrong'));
             document.getElementById('score').innerText = "0";
             document.getElementById('progress').innerText = "0";
