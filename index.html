@@ -6,7 +6,6 @@
     <title>鋼琴挑戰：尋找隱藏的 C 🎹</title>
     <style>
         :root {
-            /* 基礎尺寸維持不變 */
             --white-key-width: 52px; 
             --white-key-height: 170px;
             --black-key-width: 34px;
@@ -16,8 +15,8 @@
             --gap-group-3-last: 21px;
             --container-padding: 12px; 
             
-            /* --- 核心修正：Offset 18 -> 16，實現向邊框移 2px --- */
-            --right-offset: 16px; 
+            /* --- 核心修正：Offset 從 16 減至 15，實現向邊框再移 1px --- */
+            --right-offset: 15px; 
 
             --color-found-C: #e67e5e; 
         }
@@ -105,7 +104,6 @@
         
         .last-group-3 .black-key { margin: 0 calc(var(--gap-group-3-last) / 2); }
         .last-group-3 {
-            /* 鏡像邏輯：使用同樣的 offset 數值應用於 right */
             right: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--right-offset));
             left: auto; 
         }
