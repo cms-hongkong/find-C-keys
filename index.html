@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>鋼琴彩色冒險：尋找 C 🎹</title>
+    <title>鋼琴挑戰：尋找隱藏的 C 🎹</title>
     <style>
         :root {
-            /* 沿用舊 code 嘅黃金比例尺寸 */
+            /* 沿用你的黃金比例尺寸 */
             --white-key-width: 52px; 
             --white-key-height: 170px;
             --black-key-width: 34px;
@@ -17,14 +17,8 @@
             --container-padding: 12px; 
             --right-offset: 18px; 
 
-            /* 根據圖片還原嘅顏色 */
-            --color-C: #e67e5e; /* 橙紅 */
-            --color-D: #f6ad62; /* 橙色 */
-            --color-E: #f6d165; /* 黃色 */
-            --color-F: #90eb9d; /* 綠色 */
-            --color-G: #a0e9f0; /* 淺藍 */
-            --color-A: #58a6f8; /* 深藍 */
-            --color-B: #9b7cf3; /* 紫色 */
+            /* 答啱先顯示嘅橙紅色 */
+            --color-found-C: #e67e5e; 
         }
 
         body {
@@ -48,7 +42,7 @@
         .instructions { 
             font-size: 1.3rem; margin-bottom: 15px; color: #1e293b; font-weight: bold; 
             background: #f8fafc; padding: 10px 30px; border-radius: 50px; 
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); border: 4px solid var(--color-C);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); border: 4px solid #94a3b8;
             text-align: center;
         }
 
@@ -64,35 +58,30 @@
             margin-right: 10px;
         }
 
-        /* 白鍵樣式與顏色設定 */
+        /* 初始白鍵：無文字、無顏色 */
         .white-key {
             width: var(--white-key-width);
             height: var(--white-key-height);
-            border: 1px solid rgba(0,0,0,0.1);
+            background: linear-gradient(to bottom, #cbd5e1 0%, #ffffff 10%, #ffffff 100%);
+            border: 1px solid #94a3b8;
             border-radius: 0 0 6px 6px;
             z-index: 1;
             box-sizing: border-box;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 15px;
-            font-size: 24px;
-            font-weight: 900;
-            color: black;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: background-color 0.2s, transform 0.1s;
         }
         .white-key:active { transform: translateY(4px); }
 
-        .key-C { background-color: var(--color-C); }
-        .key-D { background-color: var(--color-D); }
-        .key-E { background-color: var(--color-E); }
-        .key-F { background-color: var(--color-F); }
-        .key-G { background-color: var(--color-G); }
-        .key-A { background-color: var(--color-A); }
-        .key-B { background-color: var(--color-B); }
+        /* 答啱之後顯色 */
+        .found-C { 
+            background: var(--color-found-C) !important; 
+            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.2), 0 0 15px var(--color-found-C);
+        }
 
-        /* 黑鍵樣式 (純視覺座標，不可點擊以減少干擾) */
+        /* 答錯回饋 */
+        .wrong { background: rgba(239, 68, 68, 0.6) !important; }
+
+        /* 黑鍵樣式 (維持不變) */
         .black-group {
             position: absolute;
             display: flex;
@@ -109,7 +98,6 @@
             box-shadow: 2px 3px 6px rgba(0,0,0,0.6);
         }
 
-        /* 定位邏輯沿用 */
         .group-2 .black-key { margin: 0 calc(var(--gap-group-2) / 2); }
         .group-2 { left: calc(var(--container-padding) + var(--white-key-width) - (var(--black-key-width) + (var(--gap-group-2) / 2)) + var(--right-offset)); }
         .group-3 .black-key { margin: 0 calc(var(--gap-group-3) / 2); }
@@ -120,10 +108,10 @@
             left: auto; 
         }
 
-        /* 煙花粒子 */
+        /* 強力煙花 */
         .firework-particle {
             position: absolute;
-            width: 10px; height: 10px;
+            width: 8px; height: 8px;
             border-radius: 50%;
             pointer-events: none;
             z-index: 100;
@@ -147,12 +135,8 @@
             align-items: center;
             z-index: 1000;
         }
-        #victory-screen h2 { font-size: 3rem; color: #fbbf24; }
-
-        .btn-restart {
-            padding: 15px 40px; font-size: 1.5rem; background: #22c55e; color: white;
-            border: none; border-radius: 50px; cursor: pointer; font-weight: bold;
-        }
+        #victory-screen h2 { font-size: 3rem; color: #fbbf24; text-align: center; }
+        .btn-restart { padding: 15px 40px; font-size: 1.5rem; background: #22c55e; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 20px;}
     </style>
 </head>
 <body>
@@ -162,23 +146,23 @@
         <div class="progress-board">進度: <span id="progress">0</span> / 10</div>
     </div>
 
-    <div class="instructions" id="mission">🏠 搵出橙紅色嘅 C 老師！</div>
+    <div class="instructions" id="mission">🏠 搵出小房子（2個黑鍵）門口位嘅 C！</div>
 
     <div class="piano-container" id="piano">
-        <div class="white-key key-C" onclick="checkNote('C', this)">C</div>
-        <div class="white-key key-D" onclick="checkNote('D', this)">D</div>
-        <div class="white-key key-E" onclick="checkNote('E', this)">E</div>
-        <div class="white-key key-F" onclick="checkNote('F', this)">F</div>
-        <div class="white-key key-G" onclick="checkNote('G', this)">G</div>
-        <div class="white-key key-A" onclick="checkNote('A', this)">A</div>
-        <div class="white-key key-B" onclick="checkNote('B', this)">B</div>
-        <div class="white-key key-C" onclick="checkNote('C', this)">C</div>
-        <div class="white-key key-D" onclick="checkNote('D', this)">D</div>
-        <div class="white-key key-E" onclick="checkNote('E', this)">E</div>
-        <div class="white-key key-F" onclick="checkNote('F', this)">F</div>
-        <div class="white-key key-G" onclick="checkNote('G', this)">G</div>
-        <div class="white-key key-A" onclick="checkNote('A', this)">A</div>
-        <div class="white-key key-B" onclick="checkNote('B', this)">B</div>
+        <div class="white-key" onclick="checkNote('C', this)"></div>
+        <div class="white-key" onclick="checkNote('D', this)"></div>
+        <div class="white-key" onclick="checkNote('E', this)"></div>
+        <div class="white-key" onclick="checkNote('F', this)"></div>
+        <div class="white-key" onclick="checkNote('G', this)"></div>
+        <div class="white-key" onclick="checkNote('A', this)"></div>
+        <div class="white-key" onclick="checkNote('B', this)"></div>
+        <div class="white-key" onclick="checkNote('C', this)"></div>
+        <div class="white-key" onclick="checkNote('D', this)"></div>
+        <div class="white-key" onclick="checkNote('E', this)"></div>
+        <div class="white-key" onclick="checkNote('F', this)"></div>
+        <div class="white-key" onclick="checkNote('G', this)"></div>
+        <div class="white-key" onclick="checkNote('A', this)"></div>
+        <div class="white-key" onclick="checkNote('B', this)"></div>
 
         <div class="black-group group-2"><div class="black-key"></div><div class="black-key"></div></div>
         <div class="black-group group-3"><div class="black-key"></div><div class="black-key"></div><div class="black-key"></div></div>
@@ -187,8 +171,8 @@
     </div>
 
     <div id="victory-screen">
-        <h2>🎉 太棒了！ 🎉<br>你認得 C 老師喇！</h2>
-        <button class="btn-restart" onclick="resetGame()">再玩一次</button>
+        <h2>🎉 太厲害了！ 🎉<br>你已經掌握咗 C 老師嘅位置！</h2>
+        <button class="btn-restart" onclick="resetGame()">再挑戰一次</button>
     </div>
 
     <script>
@@ -197,7 +181,7 @@
         let isTransitioning = false;
 
         function checkNote(note, element) {
-            if (isTransitioning) return;
+            if (isTransitioning || element.classList.contains('found-C') || element.classList.contains('wrong')) return;
 
             if (note === 'C') {
                 isTransitioning = true;
@@ -206,17 +190,24 @@
                 document.getElementById('score').innerText = score;
                 document.getElementById('progress').innerText = progress;
                 
+                // 【核心改動】答啱先顯色
+                element.classList.add('found-C');
                 triggerMegaFirework(element);
 
-                if (progress >= 10) {
-                    setTimeout(() => {
+                // 等待煙花結束
+                setTimeout(() => {
+                    if (progress >= 10) {
                         document.getElementById('victory-screen').style.display = 'flex';
-                    }, 2200);
-                } else {
-                    setTimeout(() => {
+                    } else {
+                        // 移除顯色，準備下一題
+                        element.classList.remove('found-C');
                         isTransitioning = false;
-                    }, 2200);
-                }
+                    }
+                }, 2200);
+            } else {
+                // 答錯閃爍紅色回饋
+                element.classList.add('wrong');
+                setTimeout(() => element.classList.remove('wrong'), 500);
             }
         }
 
@@ -224,6 +215,7 @@
             score = 0;
             progress = 0;
             isTransitioning = false;
+            document.querySelectorAll('.white-key').forEach(k => k.classList.remove('found-C', 'wrong'));
             document.getElementById('score').innerText = "0";
             document.getElementById('progress').innerText = "0";
             document.getElementById('victory-screen').style.display = 'none';
